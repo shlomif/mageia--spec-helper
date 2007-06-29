@@ -1,13 +1,13 @@
 PACKAGE = spec-helper
-VERSION = 0.26
+VERSION = 0.26.1
 SVNPATH = svn+ssh://svn.mandriva.com/svn/soft/rpm/$(PACKAGE)
 
-SCRIPT_FILES = spec-helper clean_files clean_perl compress_files strip_files \
+SCRIPT_FILES = clean_files clean_perl compress_files strip_files \
 	       lib_symlinks gprintify.py fix-mo translate_menu.pl \
                fixpamd gprintify remove_info_dir relink_symlinks fix-eol
 BIN_FILES    = macroszification
 MACROS_FILES = spec-helper.macros
-FILES        = AUTHORS Makefile ChangeLog Howto-spec-helper \
+FILES        = AUTHORS Makefile NEWS README \
 	       $(SCRIPT_FILES) $(BIN_FILES) $(MACROS_FILES:=.in)
 
 bindir       = /usr/bin
