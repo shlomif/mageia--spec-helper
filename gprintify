@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id$
+# $Id: gprintify 264358 2010-01-01 22:06:32Z guillomovitch $
 # convert end of line patterns from DOS to UNIX
 
 use strict;

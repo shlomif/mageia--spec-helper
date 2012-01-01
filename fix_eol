@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id$
+# $Id: fix_eol 257536 2009-05-23 12:48:00Z guillomovitch $
 # convert end of line patterns from DOS to UNIX
 
 use strict;

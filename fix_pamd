@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id$
+# $Id: fix_pamd 257534 2009-05-23 12:45:44Z guillomovitch $
 
 if [ -z "$RPM_BUILD_ROOT" ]; then
     echo "No build root defined" >&2

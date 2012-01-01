@@ -3,7 +3,7 @@
 # Project         : Mandrake Linux
 # Module          : spec-helper
 # File            : fix-mo
-# Version         : $Id$
+# Version         : $Id: fix_mo 234135 2008-02-10 14:24:43Z guillomovitch $
 # Author          : Pablo Saratxaga
 # Created On      : Fri Feb 14 08:27:47 2003
 # Purpose         : Fix bad translations

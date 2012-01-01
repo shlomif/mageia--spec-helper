@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id$
+# $Id: check_elf_files 266655 2010-03-05 12:59:47Z peroyvind $
 # Strip files
 
 use strict;

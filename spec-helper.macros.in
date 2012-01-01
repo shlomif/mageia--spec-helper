@@ -1,4 +1,4 @@
-# $Id$
+# $Id: spec-helper.macros.in 266679 2010-03-09 00:01:53Z peroyvind $
 
 %_spec_helper_dir @pkgdatadir@
 

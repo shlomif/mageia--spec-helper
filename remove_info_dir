@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id$
+# $Id: remove_info_dir 257537 2009-05-23 12:48:25Z guillomovitch $
 
 if [ -z "$RPM_BUILD_ROOT" ]; then
     echo "No build root defined" >&2
