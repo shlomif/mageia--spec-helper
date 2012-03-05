@@ -1,4 +1,4 @@
-2012-03-05 D Morgan <dmorgan@mageia.org>0.31.5
+2012-03-05 D Morgan <dmorgan@mageia.org> 0.31.5
     * prevent waiting for non existing files if files contains space or dash
 
 2010-11-22 Funda Wang <fwang@mandriva.org> 0.31.4
