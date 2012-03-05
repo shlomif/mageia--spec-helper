@@ -46,7 +46,7 @@ sub check_missing_or_unused_libs {
 # TODO: we should write a binding for libfile...
 sub expensive_test {
     my ($file) = @_;
-    my $type = `file -- $file`;
+    my $type = `file -- "$file"`;
 }
 
 # Check if a file is an elf binary, shared library, or static library,
