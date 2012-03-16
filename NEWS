@@ -1,3 +1,4 @@
+2012-03-16 Anssi Hannula <anssi@mageia.org> 0.31.7
     * clean_perl: use -empty instead of silencing failing directory deletion
       attempts
     * clean_perl: don't try to remove empty directories directly under
