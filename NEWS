@@ -1,3 +1,6 @@
+    * clean_perl: use -empty instead of silencing failing directory deletion
+      attempts
+
 2012-03-05 D Morgan <dmorgan@mageia.org> 0.31.6
     * prevent waiting for non existing files if files contains space or dash
 
