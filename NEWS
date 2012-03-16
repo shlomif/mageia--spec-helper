@@ -1,5 +1,7 @@
     * clean_perl: use -empty instead of silencing failing directory deletion
       attempts
+    * clean_perl: don't try to remove empty directories directly under
+      /usr/lib/perl5 (e.g. /usr/lib/perl5/vendor_perl of perl itself)
 
 2012-03-05 D Morgan <dmorgan@mageia.org> 0.31.6
     * prevent waiting for non existing files if files contains space or dash

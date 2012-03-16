@@ -17,4 +17,4 @@ for i in $(find $d -name "*.bs"); do
     fi
 done
 
-find $d -depth -type d -empty -exec rmdir {} \;
+find $d -depth -mindepth 2 -type d -empty -exec rmdir {} \;
