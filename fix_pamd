@@ -14,6 +14,6 @@ fi
 configs=`find $RPM_BUILD_ROOT/etc/pam.d/ -type f ! -type l 2> /dev/null`
 if [ -n "$configs" ]; then
     echo -n "Fixing pam.d config files..."
-    perl -pi -e "s,/(lib|lib64)/security/,," $configs
+    perl -pi -e "s,/(usr/)?(lib|lib64)/security/,," $configs
     echo "done"
 fi
