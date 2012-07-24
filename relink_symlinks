@@ -15,7 +15,7 @@ sub relativize {
     return unless -l $_;
 
     my $link = readlink($_);
-    return unless $link =~ m{^/};
+    return unless $link =~ m{^/} && $link !~ m{^/(dev|proc|sys)/};
 
     $link =~ s{^/}{};
     my $dirname = $File::Find::dir;
