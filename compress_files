@@ -112,10 +112,12 @@ if (@files) {
     my @command = $ext eq '.gz'   ? qw/gzip -9f/
                 : $ext eq '.bz2'  ? qw/bzip2 -9f/
                 : $ext eq '.lzma' ? qw/lzma -9f --text/
-                : $ext eq '.xz'   ? qw/xz -9f/
+                : $ext eq '.xz'   ? qw/xz -f/
                 :                   qw//
                 ;
     xargs(\@files, @command);
+    die "Something wrong with the man/info file compression"
+         if $?;
 }
 
 # Fix up symlinks that were pointing to the uncompressed files.
