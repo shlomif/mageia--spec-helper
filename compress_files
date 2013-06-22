@@ -21,25 +21,26 @@ $buildroot =~ s|/$||;
 my $exclude_pattern = $ENV{EXCLUDE_FROM_COMPRESS} ?
     qr/$ENV{EXCLUDE_FROM_COMPRESS}/ : undef;
 
-my @sodirs = map { "$buildroot/$_" } qw{
+my @sodirs = map { "$buildroot/$_" } qw(
     usr/man
     usr/X11R6/man
     usr/lib/perl5/man
-};
-my @mandirs = map { "$buildroot/$_" } qw{
+);
+my @mandirs = map { "$buildroot/$_" } qw(
     usr/info
     usr/share/info
     usr/man
     usr/share/man
     usr/X11/man
     usr/lib/perl5/man
-};
+);
 
 # Convert man pages from old locations just consisting
 # of a single include directive to a symlink
 my (@sofiles, @sodests);
 
 sub so_function {
+    local ($_) = @_;
     # skip symlinks
     return if -l $_;
     # skip directories
@@ -53,7 +54,7 @@ sub so_function {
     # Test first line of file for the .so thing.
     open(my $in, $_);
     my $line = <$in>;
-    close ($in);
+    close($in);
     if ($line =~ m/\.so\s+(.*)/) {
         my $solink = $1;
         # This test is here to prevent links like ... man8/../man8/foo.8
@@ -69,7 +70,7 @@ sub so_function {
 }
 
 foreach my $dir (@sodirs) {
-    find(\&so_function, $dir) if -e $dir;
+    File::Find::find(\&so_function, $dir) if -e $dir;
 }
 foreach my $sofile (@sofiles) {
     my $sodest = shift(@sodests);
@@ -80,6 +81,7 @@ foreach my $sofile (@sofiles) {
 # find non-compressed info/man pages
 my @files;
 sub function {
+    local ($_) = @_;
     # skip symlinks
     return if -l $_;
     # skip directories
@@ -87,7 +89,7 @@ sub function {
     # skip excluded files
     return if $exclude_pattern && $File::Find::name =~ $exclude_pattern;
     # skip compressed files
-    return if $_ =~ /\.(?:gz|bz2|lzma|xz)$/;
+    return if /\.(?:gz|bz2|lzma|xz)$/;
     # skip particular files
     return if $_ eq 'dir' || $_ eq 'whatis';
 
@@ -95,7 +97,7 @@ sub function {
 }
 
 foreach my $dir (@mandirs) {
-    find(\&function, $dir) if -e $dir;
+    File::Find::find(\&function, $dir) if -e $dir;
 }
 
 # uncompress info/man pages using another format
@@ -107,16 +109,16 @@ uncompress_files('.xz', 'xz') if $ext ne '.xz';
 # drop executable bits
 foreach my $file (@files) {
     my $mode = (stat($file))[2];
-    chmod $mode & ~S_IXUSR & ~S_IXGRP & ~S_IXOTH, $file;
+    chmod($mode & ~S_IXUSR & ~S_IXGRP & ~S_IXOTH, $file);
 }
 
 if (@files) {
 
-    my @command = $ext eq '.gz'   ? qw/gzip -9f/
-                : $ext eq '.bz2'  ? qw/bzip2 -9f/
-                : $ext eq '.lzma' ? qw/lzma -9f --text/
-                : $ext eq '.xz'   ? qw/xz -f/
-                :                   qw//
+    my @command = $ext eq '.gz'   ? qw(gzip -9f)
+                : $ext eq '.bz2'  ? qw(bzip2 -9f)
+                : $ext eq '.lzma' ? qw(lzma -9f --text)
+                : $ext eq '.xz'   ? qw(xz -f)
+                :                   qw()
                 ;
     xargs(\@files, @command);
     die "Something wrong with the man/info file compression"
@@ -125,6 +127,7 @@ if (@files) {
 
 # Fix up symlinks that were pointing to the uncompressed files.
 sub link_function {
+    local ($_) = @_;
     # skip everything but symlinks
     return unless -l $_;
     # skip non-dangling symlinks
@@ -140,7 +143,7 @@ sub link_function {
     }
 }
 
-find(\&link_function, $buildroot);
+File::Find::find(\&link_function, $buildroot);
 
 # Run a command that may have a huge number of arguments, like xargs does.
 # Pass in a reference to an array containing the arguments, and then other
@@ -168,12 +171,12 @@ sub xargs {
         if ($length < $command_max) {
             push @collect, $arg;
         } else {
-            system(@_, @collect) if $#collect > -1;
+            system(@_, @collect) if @collect > 0;
             @collect = $arg;
             $length = $static_length + length($arg) + 1;
         }
     }
-    system(@_, @collect) if $#collect > -1;
+    system(@_, @collect) if @collect > 0;
 }
 
 # uncompress info/man pages with a given extension
@@ -184,7 +187,8 @@ sub uncompress_files {
 
 
     foreach my $dir (@mandirs) {
-        find(sub {
+        File::Find::find(sub {
+	    local ($_) = @_;
 	    # skip symlinks
 	    return if -l $_;
 	    # skip directories
@@ -192,7 +196,7 @@ sub uncompress_files {
 	    # skip excluded files
 	    return if $exclude_pattern && $File::Find::name =~ $exclude_pattern;
 	    # skip everything but files with wanted extension
-	    return if $_ !~ /$extension$/;
+	    return if !/$extension$/;
 	    
 	    push @compressed_files, $File::Find::name;
 	}, $dir) if -e $dir;
