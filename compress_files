@@ -38,7 +38,8 @@ my @mandirs = map { "$buildroot/$_" } qw{
 # Convert man pages from old locations just consisting
 # of a single include directive to a symlink
 my (@sofiles, @sodests);
-my $so_function = sub {
+
+sub so_function {
     # skip symlinks
     return if -l $_;
     # skip directories
@@ -65,9 +66,10 @@ my $so_function = sub {
         push @sofiles, $File::Find::name;
         push @sodests, $solink;
     }
-};
+}
+
 foreach my $dir (@sodirs) {
-    find($so_function, $dir) if -e $dir;
+    find(\&so_function, $dir) if -e $dir;
 }
 foreach my $sofile (@sofiles) {
     my $sodest = shift(@sodests);
@@ -77,7 +79,7 @@ foreach my $sofile (@sofiles) {
 
 # find non-compressed info/man pages
 my @files;
-my $function = sub {
+sub function {
     # skip symlinks
     return if -l $_;
     # skip directories
@@ -90,9 +92,10 @@ my $function = sub {
     return if $_ eq 'dir' || $_ eq 'whatis';
 
     push @files, $File::Find::name;
-};
+}
+
 foreach my $dir (@mandirs) {
-    find($function, $dir) if -e $dir;
+    find(\&function, $dir) if -e $dir;
 }
 
 # uncompress info/man pages using another format
@@ -121,7 +124,7 @@ if (@files) {
 }
 
 # Fix up symlinks that were pointing to the uncompressed files.
-my $link_function = sub {
+sub link_function {
     # skip everything but symlinks
     return unless -l $_;
     # skip non-dangling symlinks
@@ -135,8 +138,9 @@ my $link_function = sub {
         # Bad link go on nowhere (any better idea) ?
         unlink $_;
     }
-};
-find($link_function, $buildroot);
+}
+
+find(\&link_function, $buildroot);
 
 # Run a command that may have a huge number of arguments, like xargs does.
 # Pass in a reference to an array containing the arguments, and then other
@@ -178,21 +182,20 @@ sub uncompress_files {
 
     my @compressed_files;
 
-    my $function = sub {
-        # skip symlinks
-        return if -l $_;
-        # skip directories
-        return if -d $_;
-        # skip excluded files
-        return if $exclude_pattern && $File::Find::name =~ $exclude_pattern;
-        # skip everything but files with wanted extension
-        return if $_ !~ /$extension$/;
-
-        push @compressed_files, $File::Find::name;
-    };
 
     foreach my $dir (@mandirs) {
-        find($function, $dir) if -e $dir;
+        find(sub {
+	    # skip symlinks
+	    return if -l $_;
+	    # skip directories
+	    return if -d $_;
+	    # skip excluded files
+	    return if $exclude_pattern && $File::Find::name =~ $exclude_pattern;
+	    # skip everything but files with wanted extension
+	    return if $_ !~ /$extension$/;
+	    
+	    push @compressed_files, $File::Find::name;
+	}, $dir) if -e $dir;
     }
 
     if (@compressed_files) {
