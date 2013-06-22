@@ -120,9 +120,8 @@ if (@files) {
                 : $ext eq '.xz'   ? qw(xz -f)
                 :                   qw()
                 ;
-    xargs(\@files, @command);
-    die "Something wrong with the man/info file compression"
-         if $?;
+    xargs(\@files, @command)
+	or die "Something wrong with the man/info file compression";
 }
 
 # Fix up symlinks that were pointing to the uncompressed files.
@@ -176,7 +175,7 @@ sub xargs {
             $length = $static_length + length($arg) + 1;
         }
     }
-    system(@_, @collect) if @collect > 0;
+    system(@_, @collect) == 0 if @collect > 0;
 }
 
 # uncompress info/man pages with a given extension
@@ -203,9 +202,8 @@ sub uncompress_files {
     }
 
     if (@compressed_files) {
-        xargs(\@compressed_files, $command, "-d");
-        die "Something wrong with the decompression of the $extension man/info file"
-            if $?;
+        xargs(\@compressed_files, $command, "-d")
+	    or die "Something wrong with the decompression of the $extension man/info file";
         my $length = length($extension);
         push(@files, map { substr($_, 0, -$length) } @compressed_files);
     }
