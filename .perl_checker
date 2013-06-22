@@ -1,2 +1,4 @@
 Cwd
+File::Basename
 File::Find
+XSLoader
