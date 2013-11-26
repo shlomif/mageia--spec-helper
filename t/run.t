@@ -12,7 +12,7 @@ use File::Temp qw/tempdir/;
 my ($out, $err);
 delete $ENV{RPM_BUILD_ROOT};
 
-foreach my $prog qw/clean_files compress_files relink_symlinks gprintify translate_menu remove_info_dir fix_pamd fix_eol check_elf_files/ {
+foreach my $prog (qw/clean_files compress_files relink_symlinks gprintify translate_menu remove_info_dir fix_pamd fix_eol check_elf_files/) {
 
     ($out, $err) = run_prog($prog);
     is(  $out, '',                         "$prog stdin without buildroot" );
