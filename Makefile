@@ -1,6 +1,5 @@
 PACKAGE = spec-helper
 VERSION = 0.31.8
-SVNPATH = svn+ssh://svn.mandriva.com/svn/soft/rpm/$(PACKAGE)
 
 SCRIPT_FILES = clean_files clean_perl compress_files check_elf_files \
                lib_symlinks fix_mo translate_menu \
@@ -60,5 +59,6 @@ tar: dir localcopy
 
 dist: tar
 
-svntag:
-	svn cp -m 'version $(VERSION)' $(SVNPATH)/trunk $(SVNPATH)/tags/v$(VERSION)
+tag:
+	git tag '$(VERSION)'
+	git push origin $(VERSION)
