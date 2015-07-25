@@ -40,19 +40,21 @@ my @mandirs = map { "$buildroot/$_" } qw(
 my (@sofiles, @sodests);
 
 sub so_function {
-    local ($_) = @_;
+    local $_ = $_;
+    my $fn = $_;
+
     # skip symlinks
-    return if -l $_;
+    return if -l $fn;
     # skip directories
-    return if -d $_;
+    return if -d $fn;
     # The -s test is becuase a .so file tends to be small. We don't want
     # to open every man page. 1024 is arbitrary.
-    return if -s $_ > 1024;
+    return if -s $fn > 1024;
     # skip excluded files
     return if $exclude_pattern && $File::Find::name =~ $exclude_pattern;
 
     # Test first line of file for the .so thing.
-    open(my $in, $_);
+    open(my $in, $fn);
     my $line = <$in>;
     close($in);
     if ($line =~ m/\.so\s+(.*)/) {
@@ -81,17 +83,19 @@ foreach my $sofile (@sofiles) {
 # find non-compressed info/man pages
 my @files;
 sub function {
-    local ($_) = @_;
+    local $_ = $_;
+    my $fn = $_;
+
     # skip symlinks
-    return if -l $_;
+    return if -l $fn;
     # skip directories
-    return if -d $_;
+    return if -d $fn;
     # skip excluded files
     return if $exclude_pattern && $File::Find::name =~ $exclude_pattern;
     # skip compressed files
-    return if /\.(?:gz|bz2|lzma|xz)$/;
+    return if $fn =~ /\.(?:gz|bz2|lzma|xz)$/;
     # skip particular files
-    return if $_ eq 'dir' || $_ eq 'whatis';
+    return if $fn eq 'dir' || $fn eq 'whatis';
 
     push @files, $File::Find::name;
 }
@@ -128,19 +132,21 @@ if (@files) {
 sub link_function {
     # $_ is already defined by File::Find.
     #
+    local $_ = $_;
+    my $fn = $_;
 
     # skip everything but symlinks
-    return unless -l $_;
+    return unless -l $fn;
     # skip non-dangling symlinks
-    my $linkval = readlink($_);
+    my $linkval = readlink($fn);
     return if -e "$File::Find::dir/$linkval";
 
     if (-e "$File::Find::dir/$linkval$ext") {
-        unlink $_;
-        symlink "$linkval$ext", "$_$ext";
+        unlink $fn;
+        symlink "$linkval$ext", "$fn$ext";
     } elsif ($File::Find::dir =~ m|man/|)  {
         # Bad link go on nowhere (any better idea) ?
-        unlink $_;
+        unlink $fn;
     }
 
     return;
@@ -160,8 +166,8 @@ sub xargs {
 
     # Figure out length of static portion of command.
     my $static_length = 0;
-    foreach (@_) {
-        $static_length += length($_) + 1;
+    foreach my $str (@_) {
+        $static_length += length($str) + 1;
     }
 
     my @collect;
@@ -190,19 +196,22 @@ sub uncompress_files {
 
 
     foreach my $dir (@mandirs) {
-        File::Find::find(sub {
-	    local ($_) = @_;
-	    # skip symlinks
-	    return if -l $_;
-	    # skip directories
-	    return if -d $_;
-	    # skip excluded files
-	    return if $exclude_pattern && $File::Find::name =~ $exclude_pattern;
-	    # skip everything but files with wanted extension
-	    return if !/$extension$/;
-	    
-	    push @compressed_files, $File::Find::name;
-	}, $dir) if -e $dir;
+        File::Find::find(
+            sub {
+                local $_ = $_;
+                my $fn = $_;
+                # skip symlinks
+                return if -l $fn;
+                # skip directories
+                return if -d $fn;
+                # skip excluded files
+                return if $exclude_pattern && $File::Find::name =~ $exclude_pattern;
+                # skip everything but files with wanted extension
+                return if $fn !~ /$extension$/;
+                push @compressed_files, $File::Find::name;
+            },
+            $dir
+        ) if -e $dir;
     }
 
     if (@compressed_files) {
