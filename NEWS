@@ -1,3 +1,7 @@
+2015-07-25 Shlomi Fish <shlomif@cpan.org> 0.31.9
+    * gprintf: eliminate warnings on perl-5.22.0-and-above.
+    * compress_files: Fix handling of $_ in the File::Find::find() callback.
+
 2012-07-24 Colin Guthrie <colin@magiea.org> 0.31.8
     * fix_pamd: Check for /usr/lib[64]/security/ folder too after usrmove
     * relink_symlinks: Do not make symlinks to /dev, /proc or /sys relative

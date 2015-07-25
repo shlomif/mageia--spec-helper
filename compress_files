@@ -126,7 +126,9 @@ if (@files) {
 
 # Fix up symlinks that were pointing to the uncompressed files.
 sub link_function {
-    local ($_) = @_;
+    # $_ is already defined by File::Find.
+    #
+
     # skip everything but symlinks
     return unless -l $_;
     # skip non-dangling symlinks
@@ -140,6 +142,8 @@ sub link_function {
         # Bad link go on nowhere (any better idea) ?
         unlink $_;
     }
+
+    return;
 }
 
 File::Find::find(\&link_function, $buildroot);
