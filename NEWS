@@ -1,3 +1,4 @@
+2016-01-09 Pascal Terjan <pterjan@mageia.org> 0.31.11
     * compress_files: drop support for LZMA
     * restrict_to_cpu0: new helper to prevent SMP on some arches
 

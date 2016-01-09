@@ -1,5 +1,5 @@
 PACKAGE = spec-helper
-VERSION = 0.31.10
+VERSION = 0.31.11
 
 SCRIPT_FILES = clean_files clean_perl compress_files check_elf_files \
                lib_symlinks fix_mo translate_menu \
