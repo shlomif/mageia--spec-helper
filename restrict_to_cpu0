@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/taskset -c 0 /bin/sh "$1"

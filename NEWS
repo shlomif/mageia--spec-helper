@@ -1,4 +1,5 @@
     * compress_files: drop support for LZMA
+    * restrict_to_cpu0: new helper to prevent SMP on some arches
 
 2015-07-25 Shlomi Fish <shlomif@cpan.org> 0.31.10
     * compress_files: More proper handling of $_. Convert as much as possible

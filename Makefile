@@ -3,7 +3,8 @@ VERSION = 0.31.10
 
 SCRIPT_FILES = clean_files clean_perl compress_files check_elf_files \
                lib_symlinks fix_mo translate_menu \
-               fix_pamd gprintify remove_info_dir relink_symlinks fix_eol
+               fix_pamd gprintify remove_info_dir relink_symlinks fix_eol \
+               restrict_to_cpu0
 BIN_FILES    = macroszification
 MACROS_FILES = spec-helper.macros
 TEST_FILES   = t/*.t
