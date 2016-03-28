@@ -1,7 +1,7 @@
 PACKAGE = spec-helper
-VERSION = 0.31.11
+VERSION = 0.31.12
 
-SCRIPT_FILES = clean_files clean_perl compress_files check_elf_files \
+SCRIPT_FILES = clean_files clean_perl compress_files check_elf_files check_desktop_files\
                lib_symlinks fix_mo translate_menu \
                fix_pamd gprintify remove_info_dir relink_symlinks fix_eol \
                restrict_to_cpu0
