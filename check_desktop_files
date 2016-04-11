@@ -7,6 +7,12 @@ use File::Find;
 
 my $FILTER = qr/\.desktop\z/;
 
+my $exclude_re;
+if (defined(my $exclude_s = $ENV{RPM_CHECK_DESKTOP_EXCLUDE_RE}))
+{
+    $exclude_re = qr/$exclude_s/;
+}
+
 sub main
 {
     my $buildroot = $ENV{RPM_BUILD_ROOT};
@@ -16,7 +22,12 @@ sub main
             wanted =>
             sub {
                 my $fn = $File::Find::name;
-                if ($fn =~ $FILTER)
+                if ($fn =~ $FILTER and
+                    ((!defined($exclude_re))
+                            or
+                        ($fn !~ $exclude_re)
+                    )
+                )
                 {
                     if (system('desktop-file-validate', $fn) != 0)
                     {
